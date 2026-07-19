@@ -1,0 +1,60 @@
+{
+  "profile": {
+    "founder_id": "fndr_syn_004",
+    "name": "Priya Raman (Synthetic)",
+    "headline": "Building evaluation tooling for agent pipelines",
+    "location": "Seattle, WA",
+    "origin": "github",
+    "bio": "Synthetic founder profile created for the hackathon demo."
+  },
+  "signals": [
+    {
+      "signal_id": "sig_syn4_eval_001",
+      "ts": "2026-07-10T15:00:00Z",
+      "source": "synthetic",
+      "text": "Synthetic product signal: shipped an evaluation harness for agent pipelines.",
+      "url": null
+    },
+    {
+      "signal_id": "sig_syn4_contrib_001",
+      "ts": "2026-06-25T10:00:00Z",
+      "source": "synthetic",
+      "text": "Synthetic repository signal: contributor activity on the harness is growing.",
+      "url": null
+    },
+    {
+      "signal_id": "sig_syn4_post_001",
+      "ts": "2026-05-28T13:00:00Z",
+      "source": "synthetic",
+      "text": "Synthetic writing signal: a technical post on failure taxonomies for agents.",
+      "url": null
+    },
+    {
+      "signal_id": "sig_syn4_repo_001",
+      "ts": "2026-05-05T09:00:00Z",
+      "source": "synthetic",
+      "text": "Synthetic repository signal: initial public release of the eval harness.",
+      "url": null
+    },
+    {
+      "signal_id": "sig_syn4_bg_001",
+      "ts": "2026-04-02T17:00:00Z",
+      "source": "synthetic",
+      "text": "Synthetic background signal: previous QA infrastructure work at a developer-tools company.",
+      "url": null
+    }
+  ],
+  "score_history": [
+    {
+      "ts": "2026-06-10T08:00:00Z",
+      "score": 53,
+      "band": 30
+    },
+    {
+      "ts": "2026-07-18T08:00:00Z",
+      "score": 61,
+      "band": 24
+    }
+  ],
+  "applications": []
+}

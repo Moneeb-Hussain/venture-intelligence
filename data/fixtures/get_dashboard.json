@@ -2,7 +2,7 @@
   {
     "founder_id": "fndr_syn_001",
     "name": "Maya Chen (Synthetic)",
-    "origin": "synthetic",
+    "origin": "inbound",
     "founder_score": 59,
     "band": 22,
     "trend": "up",
@@ -11,5 +11,44 @@
       "[Synthetic] Won a university hackathon"
     ],
     "has_open_app": true
+  },
+  {
+    "founder_id": "fndr_syn_002",
+    "name": "Diego Alvarez (Synthetic)",
+    "origin": "github",
+    "founder_score": 73,
+    "band": 21,
+    "trend": "up",
+    "top_signals": [
+      "[Synthetic] Launched an open-source tracing agent",
+      "[Synthetic] Three design partners in production"
+    ],
+    "has_open_app": true
+  },
+  {
+    "founder_id": "fndr_syn_004",
+    "name": "Priya Raman (Synthetic)",
+    "origin": "github",
+    "founder_score": 61,
+    "band": 24,
+    "trend": "up",
+    "top_signals": [
+      "[Synthetic] Shipped an eval harness for agent pipelines",
+      "[Synthetic] Growing contributor activity"
+    ],
+    "has_open_app": false
+  },
+  {
+    "founder_id": "fndr_syn_003",
+    "name": "Sana Iqbal (Synthetic)",
+    "origin": "hn",
+    "founder_score": 51,
+    "band": 30,
+    "trend": "flat",
+    "top_signals": [
+      "[Synthetic] Thoughtful HN threads on inference cost",
+      "[Synthetic] No public repositories found"
+    ],
+    "has_open_app": false
   }
 ]
