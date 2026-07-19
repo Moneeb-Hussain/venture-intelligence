@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from typing import Any
 from fastapi import APIRouter, Depends
 
 from app.api.deps import get_application_service
@@ -10,6 +11,7 @@ from app.schemas.application import (
     Axes,
     Diligence,
     Memo,
+    AdversaryResponse,
 )
 from app.services.application_service import ApplicationService
 
@@ -54,3 +56,11 @@ def memo_application(
     service: ApplicationService = Depends(get_application_service),
 ) -> Memo:
     return service.memo(application_id)
+
+
+@router.post("/applications/{application_id}/adversary", response_model=AdversaryResponse)
+def adversary_application(
+    application_id: str,
+    service: ApplicationService = Depends(get_application_service),
+) -> AdversaryResponse:
+    return service.adversary(application_id)

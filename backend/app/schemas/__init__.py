@@ -6,6 +6,9 @@ from app.schemas.application import (
     Claim,
     Diligence,
     Memo,
+    Adversarial,
+    DecisionBrief,
+    AdversaryResponse,
 )
 from app.schemas.common import (
     DashboardFounder,
@@ -36,4 +39,7 @@ __all__ = [
     "Thesis",
     "ThesisResponse",
     "ThesisWriteRequest",
+    "Adversarial",
+    "DecisionBrief",
+    "AdversaryResponse",
 ]

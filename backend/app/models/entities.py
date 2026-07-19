@@ -19,6 +19,7 @@ class ThesisRow(Base):
     geo_json: Mapped[str] = mapped_column(Text, nullable=False)
     check_size: Mapped[int] = mapped_column(Integer, nullable=False, default=100_000)
     risk_appetite: Mapped[str] = mapped_column(String(16), nullable=False)
+    ownership_target: Mapped[float | None] = mapped_column(nullable=True, default=None)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 
 

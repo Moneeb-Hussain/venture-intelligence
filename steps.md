@@ -66,9 +66,10 @@ Claim = {claim_id, type: "traction" | "team" | "market" | "product", text,
 QueryFilter = {technical_founder: bool | null, sectors: [str], geos: [str],
                shipped_within_days: int | null, prior_vc: bool | null}
 Thesis = {sectors: [str], stage, geo: [str], check_size: 100000,
-          risk_appetite: "low" | "medium" | "high"}
+          risk_appetite: "low" | "medium" | "high",
+          ownership_target: float | null}
 Profile = {founder_id, name, headline: str | null, location: str | null,
-           origin: "github" | "hn" | "inbound" | "synthetic",
+           origin: "github" | "hn" | "inbound" | "synthetic" | "yc",
            bio: str | null}
 Axes = {
   founder: {score: number, trend: "up" | "flat" | "down", rationale},
@@ -105,9 +106,21 @@ GET  /api/thesis
 POST /api/scan/run
   -> {new_founders, new_signals, cached: bool}
 
+POST /api/scan/github {topics: [str], since_days: int}
+  -> {source: str, new_founders: int, new_signals: int, cached: bool}
+
+POST /api/scan/hn {query: str, since_days: int}
+  -> {source: str, new_founders: int, new_signals: int, cached: bool}
+
+POST /api/scan/yc {batches: [str], industries: [str]}
+  -> {source: str, new_founders: int, new_signals: int, cached: bool}
+
+GET  /api/scan/status
+  -> [{source: str, last_run: str | null, founders_total: int, cached: bool}]
+
 GET  /api/dashboard
   -> [{founder_id, name,
-       origin: "github" | "hn" | "inbound" | "synthetic",
+       origin: "github" | "hn" | "inbound" | "synthetic" | "yc",
        founder_score, band, trend: "up" | "flat" | "down",
        top_signals: [str],
        has_open_app: bool}]

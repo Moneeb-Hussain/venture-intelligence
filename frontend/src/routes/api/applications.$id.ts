@@ -1,13 +1,18 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { APPLICATIONS } from "@/lib/applications-data";
+import { createFileRoute } from '@tanstack/react-router'
+import { fetchFromBackend, mapBackendAppToFrontend } from "@/lib/backend-client";
 
 export const Route = createFileRoute("/api/applications/$id")({
   server: {
     handlers: {
       GET: async ({ params }) => {
-        const app = APPLICATIONS[params.id];
-        if (!app) return new Response("Not found", { status: 404 });
-        return Response.json(app);
+        try {
+          const bApp = await fetchFromBackend(`/applications/${params.id}`);
+          const app = mapBackendAppToFrontend(bApp);
+          return Response.json(app);
+        } catch (e: any) {
+          console.error(`Applications details fetch for ${params.id} failed:`, e);
+          return new Response(e.message || "Application not found", { status: 404 });
+        }
       },
     },
   },

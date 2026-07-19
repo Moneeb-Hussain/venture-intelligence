@@ -63,4 +63,29 @@ def test_application_pipeline_golden_path(client: TestClient) -> None:
     assert final["axes"] is not None
     assert final["diligence"] is not None
     assert final["memo"] is not None
+    assert final["adversarial"] is None
+    assert final["decision_brief"] is None
     assert len(final["evidence"]) >= 1
+
+    # Adversary prerequisite (memo is ready)
+    adversary_res = client.post(f"/api/applications/{app_id}/adversary")
+    assert adversary_res.status_code == 200, adversary_res.text
+    adversary_data = adversary_res.json()
+    assert "adversarial" in adversary_data
+    assert "decision_brief" in adversary_data
+    assert adversary_data["adversarial"]["persona"] is not None
+    assert len(adversary_data["adversarial"]["objections"]) >= 1
+
+    brief = adversary_data["decision_brief"]
+    assert "summary" in brief
+    assert "contested" in brief
+    assert "stats" in brief
+    assert "Decision Brief:" in brief["summary"]
+    assert brief["stats"]["claims"] >= 1
+
+    # Verify updated aggregate application includes adversarial and decision_brief
+    final_aggregate = client.get(f"/api/applications/{app_id}").json()
+    assert final_aggregate["adversarial"] is not None
+    assert final_aggregate["decision_brief"] is not None
+    assert final_aggregate["decision_brief"]["summary"] == brief["summary"]
+
