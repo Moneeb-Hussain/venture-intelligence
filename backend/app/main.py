@@ -1,5 +1,43 @@
 from __future__ import annotations
 
+from pathlib import Path
+import os
+import sys
+
+# Ensure both container root and backend app root are in sys.path for robust module loading
+_file_path = Path(__file__).resolve()
+_backend_root = _file_path.parents[2]  # workspace / container root
+_app_root = _file_path.parents[1]      # backend/ directory
+for _path in [_backend_root, _app_root]:
+    if str(_path) not in sys.path:
+        sys.path.insert(0, str(_path))
+
+def load_dotenv() -> None:
+    try:
+        # Look for .env in repo root, backend folder, or current working directory
+        root = Path(__file__).resolve().parents[2]
+        paths = [root / ".env", root / "backend" / ".env", Path(".env")]
+        for path in paths:
+            try:
+                if path.exists():
+                    for line in path.read_text(encoding="utf-8").splitlines():
+                        line = line.strip()
+                        if not line or line.startswith("#"):
+                            continue
+                        if "=" in line:
+                            key, val = line.split("=", 1)
+                            key = key.strip()
+                            val = val.strip().strip("'\"")
+                            if key:
+                                os.environ.setdefault(key, val)
+                    break
+            except Exception:
+                continue
+    except Exception:
+        pass
+
+load_dotenv()
+
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI

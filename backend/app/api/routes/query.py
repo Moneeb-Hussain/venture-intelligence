@@ -1,5 +1,16 @@
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+
+# Ensure both container root and backend app root are in sys.path for robust module loading
+_file_path = Path(__file__).resolve()
+_backend_root = _file_path.parents[3]  # workspace / container root
+_app_root = _file_path.parents[2]      # backend/ directory
+for _path in [_backend_root, _app_root]:
+    if str(_path) not in sys.path:
+        sys.path.insert(0, str(_path))
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -16,6 +27,8 @@ from app.schemas.sourcing import (
     ScanStatusEntry,
 )
 from app.services.sourcing_service import SourcingService
+
+from fetchers.scanner import SourcingScanner, load_status
 
 router = APIRouter(tags=["sourcing"])
 
@@ -40,7 +53,6 @@ def post_scan_github(
     body: GitHubScanRequest | None = None,
     db: Session = Depends(get_db),
 ) -> PerSourceScanResponse:
-    from backend.fetchers.scanner import SourcingScanner
     scanner = SourcingScanner(db)
     topics = body.topics if body else None
     since_days = body.since_days if body else None
@@ -53,7 +65,6 @@ def post_scan_hn(
     body: HNScanRequest | None = None,
     db: Session = Depends(get_db),
 ) -> PerSourceScanResponse:
-    from backend.fetchers.scanner import SourcingScanner
     scanner = SourcingScanner(db)
     query = body.query if body else None
     since_days = body.since_days if body else None
@@ -66,7 +77,6 @@ def post_scan_yc(
     body: YCScanRequest | None = None,
     db: Session = Depends(get_db),
 ) -> PerSourceScanResponse:
-    from backend.fetchers.scanner import SourcingScanner
     scanner = SourcingScanner(db)
     batches = body.batches if body else None
     industries = body.industries if body else None
@@ -76,7 +86,5 @@ def post_scan_yc(
 
 @router.get("/scan/status", response_model=list[ScanStatusEntry])
 def get_scan_status() -> list[ScanStatusEntry]:
-    from backend.fetchers.scanner import load_status
     status_list = load_status()
     return [ScanStatusEntry.model_validate(entry) for entry in status_list]
-

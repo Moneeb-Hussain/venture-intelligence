@@ -12,6 +12,26 @@ import { type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { AppShell } from "../components/app-shell";
 
+// Client-side interceptor to route all relative /api/... calls directly to the FastAPI backend.
+// This resolves Vercel static deployments and local SPA routing in one unified place.
+if (typeof window !== "undefined") {
+  const backendUrl = (import.meta.env.VITE_FIRSTCHECK_BACKEND_URL as string) || "https://venture-intelligence-backend-53330586668.us-east5.run.app";
+  
+  if (typeof window.fetch !== "undefined" && !(window.fetch as any).__proxied) {
+    const originalFetch = window.fetch;
+    const proxiedFetch = function (input: RequestInfo | URL, init?: RequestInit) {
+      if (typeof input === "string" && input.startsWith("/api/")) {
+        const targetUrl = `${backendUrl.replace(/\/$/, "")}${input}`;
+        console.log(`[API Redirect] Redirecting fetch ${input} -> ${targetUrl}`);
+        return originalFetch(targetUrl, init);
+      }
+      return originalFetch(input, init);
+    };
+    (proxiedFetch as any).__proxied = true;
+    window.fetch = proxiedFetch;
+  }
+}
+
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">

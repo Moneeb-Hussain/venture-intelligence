@@ -23,6 +23,10 @@ import { Route as FounderIdRouteImport } from './routes/founder.$id'
 import { Route as ApiApplicationsIdRouteImport } from './routes/api/applications.$id'
 import { Route as ApiDecisionsQueueRouteImport } from './routes/api/decisions.queue'
 import { Route as ApiFoundersIdRouteImport } from './routes/api/founders.$id'
+import { Route as ApiScanGithubRouteImport } from './routes/api/scan.github'
+import { Route as ApiScanHnRouteImport } from './routes/api/scan.hn'
+import { Route as ApiScanStatusRouteImport } from './routes/api/scan.status'
+import { Route as ApiScanYcRouteImport } from './routes/api/scan.yc'
 import { Route as ApiApplicationsIdAdversaryRouteImport } from './routes/api/applications.$id.adversary'
 import { Route as ApiApplicationsIdDiligenceRouteImport } from './routes/api/applications.$id.diligence'
 import { Route as ApiApplicationsIdMemoRouteImport } from './routes/api/applications.$id.memo'
@@ -100,6 +104,26 @@ const ApiFoundersIdRoute = ApiFoundersIdRouteImport.update({
   path: '/api/founders/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiScanGithubRoute = ApiScanGithubRouteImport.update({
+  id: '/api/scan/github',
+  path: '/api/scan/github',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiScanHnRoute = ApiScanHnRouteImport.update({
+  id: '/api/scan/hn',
+  path: '/api/scan/hn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiScanStatusRoute = ApiScanStatusRouteImport.update({
+  id: '/api/scan/status',
+  path: '/api/scan/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiScanYcRoute = ApiScanYcRouteImport.update({
+  id: '/api/scan/yc',
+  path: '/api/scan/yc',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiApplicationsIdAdversaryRoute =
   ApiApplicationsIdAdversaryRouteImport.update({
     id: '/adversary',
@@ -148,6 +172,10 @@ export interface FileRoutesByFullPath {
   '/api/applications/$id': typeof ApiApplicationsIdRouteWithChildren
   '/api/decisions/queue': typeof ApiDecisionsQueueRoute
   '/api/founders/$id': typeof ApiFoundersIdRouteWithChildren
+  '/api/scan/github': typeof ApiScanGithubRoute
+  '/api/scan/hn': typeof ApiScanHnRoute
+  '/api/scan/status': typeof ApiScanStatusRoute
+  '/api/scan/yc': typeof ApiScanYcRoute
   '/api/applications/$id/adversary': typeof ApiApplicationsIdAdversaryRoute
   '/api/applications/$id/diligence': typeof ApiApplicationsIdDiligenceRoute
   '/api/applications/$id/memo': typeof ApiApplicationsIdMemoRoute
@@ -170,6 +198,10 @@ export interface FileRoutesByTo {
   '/api/applications/$id': typeof ApiApplicationsIdRouteWithChildren
   '/api/decisions/queue': typeof ApiDecisionsQueueRoute
   '/api/founders/$id': typeof ApiFoundersIdRouteWithChildren
+  '/api/scan/github': typeof ApiScanGithubRoute
+  '/api/scan/hn': typeof ApiScanHnRoute
+  '/api/scan/status': typeof ApiScanStatusRoute
+  '/api/scan/yc': typeof ApiScanYcRoute
   '/api/applications/$id/adversary': typeof ApiApplicationsIdAdversaryRoute
   '/api/applications/$id/diligence': typeof ApiApplicationsIdDiligenceRoute
   '/api/applications/$id/memo': typeof ApiApplicationsIdMemoRoute
@@ -193,6 +225,10 @@ export interface FileRoutesById {
   '/api/applications/$id': typeof ApiApplicationsIdRouteWithChildren
   '/api/decisions/queue': typeof ApiDecisionsQueueRoute
   '/api/founders/$id': typeof ApiFoundersIdRouteWithChildren
+  '/api/scan/github': typeof ApiScanGithubRoute
+  '/api/scan/hn': typeof ApiScanHnRoute
+  '/api/scan/status': typeof ApiScanStatusRoute
+  '/api/scan/yc': typeof ApiScanYcRoute
   '/api/applications/$id/adversary': typeof ApiApplicationsIdAdversaryRoute
   '/api/applications/$id/diligence': typeof ApiApplicationsIdDiligenceRoute
   '/api/applications/$id/memo': typeof ApiApplicationsIdMemoRoute
@@ -217,6 +253,10 @@ export interface FileRouteTypes {
     | '/api/applications/$id'
     | '/api/decisions/queue'
     | '/api/founders/$id'
+    | '/api/scan/github'
+    | '/api/scan/hn'
+    | '/api/scan/status'
+    | '/api/scan/yc'
     | '/api/applications/$id/adversary'
     | '/api/applications/$id/diligence'
     | '/api/applications/$id/memo'
@@ -239,6 +279,10 @@ export interface FileRouteTypes {
     | '/api/applications/$id'
     | '/api/decisions/queue'
     | '/api/founders/$id'
+    | '/api/scan/github'
+    | '/api/scan/hn'
+    | '/api/scan/status'
+    | '/api/scan/yc'
     | '/api/applications/$id/adversary'
     | '/api/applications/$id/diligence'
     | '/api/applications/$id/memo'
@@ -261,6 +305,10 @@ export interface FileRouteTypes {
     | '/api/applications/$id'
     | '/api/decisions/queue'
     | '/api/founders/$id'
+    | '/api/scan/github'
+    | '/api/scan/hn'
+    | '/api/scan/status'
+    | '/api/scan/yc'
     | '/api/applications/$id/adversary'
     | '/api/applications/$id/diligence'
     | '/api/applications/$id/memo'
@@ -282,6 +330,10 @@ export interface RootRouteChildren {
   ApplicationIndexRoute: typeof ApplicationIndexRoute
   ApiDecisionsQueueRoute: typeof ApiDecisionsQueueRoute
   ApiFoundersIdRoute: typeof ApiFoundersIdRouteWithChildren
+  ApiScanGithubRoute: typeof ApiScanGithubRoute
+  ApiScanHnRoute: typeof ApiScanHnRoute
+  ApiScanStatusRoute: typeof ApiScanStatusRoute
+  ApiScanYcRoute: typeof ApiScanYcRoute
   ApiDecisionsIdDecideRoute: typeof ApiDecisionsIdDecideRoute
 }
 
@@ -383,6 +435,34 @@ declare module '@tanstack/react-router' {
       path: '/api/founders/$id'
       fullPath: '/api/founders/$id'
       preLoaderRoute: typeof ApiFoundersIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/scan/github': {
+      id: '/api/scan/github'
+      path: '/api/scan/github'
+      fullPath: '/api/scan/github'
+      preLoaderRoute: typeof ApiScanGithubRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/scan/hn': {
+      id: '/api/scan/hn'
+      path: '/api/scan/hn'
+      fullPath: '/api/scan/hn'
+      preLoaderRoute: typeof ApiScanHnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/scan/status': {
+      id: '/api/scan/status'
+      path: '/api/scan/status'
+      fullPath: '/api/scan/status'
+      preLoaderRoute: typeof ApiScanStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/scan/yc': {
+      id: '/api/scan/yc'
+      path: '/api/scan/yc'
+      fullPath: '/api/scan/yc'
+      preLoaderRoute: typeof ApiScanYcRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/applications/$id/adversary': {
@@ -495,6 +575,10 @@ const rootRouteChildren: RootRouteChildren = {
   ApplicationIndexRoute: ApplicationIndexRoute,
   ApiDecisionsQueueRoute: ApiDecisionsQueueRoute,
   ApiFoundersIdRoute: ApiFoundersIdRouteWithChildren,
+  ApiScanGithubRoute: ApiScanGithubRoute,
+  ApiScanHnRoute: ApiScanHnRoute,
+  ApiScanStatusRoute: ApiScanStatusRoute,
+  ApiScanYcRoute: ApiScanYcRoute,
   ApiDecisionsIdDecideRoute: ApiDecisionsIdDecideRoute,
 }
 export const routeTree = rootRouteImport

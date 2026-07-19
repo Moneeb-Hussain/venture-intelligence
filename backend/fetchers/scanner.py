@@ -14,7 +14,10 @@ from app.domain import normalize_founder_name
 from app.domain.founder_score import compute_founder_score, SignalPoint
 from app.models import Founder, Signal, ScoreSnapshotRow, AuditEvent
 from app.repositories import FounderRepository
-from backend.llm.wrapper import call_llm
+try:
+    from llm.wrapper import call_llm
+except ImportError:
+    from backend.llm.wrapper import call_llm
 
 logger = logging.getLogger("scanner")
 
