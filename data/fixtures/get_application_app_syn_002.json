@@ -1,0 +1,110 @@
+{
+  "application_id": "app_syn_002",
+  "founder_id": "fndr_syn_002",
+  "company_name": "TraceStack (Synthetic)",
+  "status": "open",
+  "claims": [
+    {
+      "claim_id": "clm_syn2_product_001",
+      "type": "product",
+      "text": "TraceStack ships an open-source tracing agent for LLM pipelines.",
+      "source_span": "Our open-source tracing agent for LLM pipelines has been live for two months."
+    },
+    {
+      "claim_id": "clm_syn2_traction_001",
+      "type": "traction",
+      "text": "Three design partners run TraceStack in production.",
+      "source_span": "Three design partners run TraceStack in production today."
+    },
+    {
+      "claim_id": "clm_syn2_team_001",
+      "type": "team",
+      "text": "The founder previously maintained a widely used observability library.",
+      "source_span": "I maintained the observability library used by several infrastructure teams."
+    }
+  ],
+  "axes": {
+    "founder": {
+      "score": 8,
+      "trend": "up",
+      "rationale": "Sustained synthetic shipping signals and prior open-source maintenance support strong execution."
+    },
+    "market": {
+      "rating": "bullish",
+      "rationale": "Synthetic market evidence shows infrastructure teams adopting tracing for LLM pipelines."
+    },
+    "idea_vs_market": {
+      "verdict": "survives",
+      "rationale": "The open-source wedge matches how infrastructure teams evaluate tooling."
+    }
+  },
+  "diligence": {
+    "claims": [
+      {
+        "claim_id": "clm_syn2_product_001",
+        "verdict": "supported",
+        "trust": "high",
+        "evidence": [
+          "sig_syn2_launch_001",
+          "sig_syn2_repo_001"
+        ],
+        "note": "Two resolved synthetic signals confirm the agent is live and gaining contributors."
+      },
+      {
+        "claim_id": "clm_syn2_traction_001",
+        "verdict": "supported",
+        "trust": "med",
+        "evidence": [
+          "sig_syn2_partner_001"
+        ],
+        "note": "One resolved synthetic signal confirms design partners in production."
+      },
+      {
+        "claim_id": "clm_syn2_team_001",
+        "verdict": "supported",
+        "trust": "high",
+        "evidence": [
+          "sig_syn2_oss_001",
+          "sig_syn2_repo_001"
+        ],
+        "note": "Maintainer history and repository activity support the team claim."
+      }
+    ],
+    "gaps": [
+      "Revenue model: not disclosed"
+    ]
+  },
+  "memo": null,
+  "adversarial": null,
+  "decision_brief": null,
+  "evidence": [
+    {
+      "signal_id": "sig_syn2_launch_001",
+      "ts": "2026-07-15T10:00:00Z",
+      "source": "synthetic",
+      "text": "Synthetic launch signal: the founder announced the TraceStack open-source tracing agent.",
+      "url": null
+    },
+    {
+      "signal_id": "sig_syn2_repo_001",
+      "ts": "2026-06-30T09:00:00Z",
+      "source": "synthetic",
+      "text": "Synthetic repository signal: the tracing agent repository passed a contributor milestone.",
+      "url": null
+    },
+    {
+      "signal_id": "sig_syn2_partner_001",
+      "ts": "2026-07-08T14:00:00Z",
+      "source": "synthetic",
+      "text": "Synthetic customer note: three design partners run the tracing agent in production.",
+      "url": null
+    },
+    {
+      "signal_id": "sig_syn2_oss_001",
+      "ts": "2026-05-15T12:00:00Z",
+      "source": "synthetic",
+      "text": "Synthetic background signal: the founder maintained an observability library used by infrastructure teams.",
+      "url": null
+    }
+  ]
+}

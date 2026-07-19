@@ -1,0 +1,76 @@
+{
+  "profile": {
+    "founder_id": "fndr_syn_002",
+    "name": "Diego Alvarez (Synthetic)",
+    "headline": "Open-source maintainer building LLM pipeline tracing",
+    "location": "Austin, TX",
+    "origin": "github",
+    "bio": "Synthetic founder profile created for the hackathon demo."
+  },
+  "signals": [
+    {
+      "signal_id": "sig_syn2_launch_001",
+      "ts": "2026-07-15T10:00:00Z",
+      "source": "synthetic",
+      "text": "Synthetic launch signal: the founder announced the TraceStack open-source tracing agent.",
+      "url": null
+    },
+    {
+      "signal_id": "sig_syn2_partner_001",
+      "ts": "2026-07-08T14:00:00Z",
+      "source": "synthetic",
+      "text": "Synthetic customer note: three design partners run the tracing agent in production.",
+      "url": null
+    },
+    {
+      "signal_id": "sig_syn2_repo_001",
+      "ts": "2026-06-30T09:00:00Z",
+      "source": "synthetic",
+      "text": "Synthetic repository signal: the tracing agent repository passed a contributor milestone.",
+      "url": null
+    },
+    {
+      "signal_id": "sig_syn2_commit_001",
+      "ts": "2026-06-22T18:00:00Z",
+      "source": "synthetic",
+      "text": "Synthetic activity signal: sustained commit activity shipping pipeline instrumentation.",
+      "url": null
+    },
+    {
+      "signal_id": "sig_syn2_oss_001",
+      "ts": "2026-05-15T12:00:00Z",
+      "source": "synthetic",
+      "text": "Synthetic background signal: the founder maintained an observability library used by infrastructure teams.",
+      "url": null
+    },
+    {
+      "signal_id": "sig_syn2_talk_001",
+      "ts": "2026-04-20T19:00:00Z",
+      "source": "synthetic",
+      "text": "Synthetic community signal: the founder gave a meetup talk on tracing LLM pipelines.",
+      "url": null
+    },
+    {
+      "signal_id": "sig_syn2_bg_001",
+      "ts": "2026-03-10T11:00:00Z",
+      "source": "synthetic",
+      "text": "Synthetic background signal: prior infrastructure engineering work at a data platform.",
+      "url": null
+    }
+  ],
+  "score_history": [
+    {
+      "ts": "2026-06-01T08:00:00Z",
+      "score": 53,
+      "band": 30
+    },
+    {
+      "ts": "2026-07-18T08:00:00Z",
+      "score": 73,
+      "band": 21
+    }
+  ],
+  "applications": [
+    "app_syn_002"
+  ]
+}
