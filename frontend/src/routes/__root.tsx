@@ -16,15 +16,42 @@ import { AppShell } from "../components/app-shell";
 // This resolves Vercel static deployments and local SPA routing in one unified place.
 if (typeof window !== "undefined") {
   const backendUrl = (import.meta.env.VITE_FIRSTCHECK_BACKEND_URL as string) || "https://venture-intelligence-backend-53330586668.us-east5.run.app";
+  const cleanBackendUrl = backendUrl.replace(/\/$/, "");
   
   if (typeof window.fetch !== "undefined" && !(window.fetch as any).__proxied) {
     const originalFetch = window.fetch;
     const proxiedFetch = function (input: RequestInfo | URL, init?: RequestInit) {
-      if (typeof input === "string" && input.startsWith("/api/")) {
-        const targetUrl = `${backendUrl.replace(/\/$/, "")}${input}`;
-        console.log(`[API Redirect] Redirecting fetch ${input} -> ${targetUrl}`);
+      let targetUrl: string | null = null;
+      let isRequestObject = false;
+      
+      if (typeof input === "string") {
+        if (input.startsWith("/api/")) {
+          targetUrl = `${cleanBackendUrl}${input}`;
+        }
+      } else if (input instanceof URL) {
+        if (input.pathname.startsWith("/api/")) {
+          targetUrl = `${cleanBackendUrl}${input.pathname}${input.search}`;
+        }
+      } else if (typeof Request !== "undefined" && input instanceof Request) {
+        const reqUrl = input.url;
+        try {
+          const parsed = new URL(reqUrl, window.location.origin);
+          if (parsed.pathname.startsWith("/api/")) {
+            targetUrl = `${cleanBackendUrl}${parsed.pathname}${parsed.search}`;
+            isRequestObject = true;
+          }
+        } catch (e) {}
+      }
+      
+      if (targetUrl) {
+        console.log(`[API Redirect] Redirecting fetch ${typeof input === "string" ? input : "[Object]"} -> ${targetUrl}`);
+        if (isRequestObject && typeof Request !== "undefined" && input instanceof Request) {
+          const req = new Request(targetUrl, input);
+          return originalFetch(req, init);
+        }
         return originalFetch(targetUrl, init);
       }
+      
       return originalFetch(input, init);
     };
     (proxiedFetch as any).__proxied = true;
