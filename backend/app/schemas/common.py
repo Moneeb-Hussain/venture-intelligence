@@ -6,7 +6,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 RiskAppetite = Literal["low", "medium", "high"]
-Origin = Literal["github", "hn", "inbound", "synthetic"]
+Origin = Literal["github", "hn", "inbound", "synthetic", "yc"]
 Trend = Literal["up", "flat", "down"]
 
 
@@ -18,6 +18,7 @@ class Thesis(BaseModel):
     geo: list[str]
     check_size: int = Field(default=100_000, ge=100_000, le=100_000)
     risk_appetite: RiskAppetite
+    ownership_target: float | None = Field(default=None, ge=0.0, le=1.0)
 
 
 class ThesisResponse(BaseModel):

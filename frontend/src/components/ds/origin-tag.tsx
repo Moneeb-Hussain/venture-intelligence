@@ -1,10 +1,11 @@
 import { cn } from "@/lib/utils";
 
-export type OriginKind = "github" | "hn" | "inbound" | "synthetic";
+export type OriginKind = "github" | "hn" | "yc" | "inbound" | "synthetic";
 
 const label: Record<OriginKind, string> = {
   github: "github",
   hn: "hn",
+  yc: "y combinator",
   inbound: "inbound",
   synthetic: "synthetic",
 };

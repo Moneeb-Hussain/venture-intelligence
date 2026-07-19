@@ -12,6 +12,7 @@ from app.domain import (
     guard_memo_recommendation,
     normalize_diligence_row,
     normalize_founder_name,
+    build_decision_brief,
 )
 from app.models import Application, Founder
 from app.repositories.applications import (
@@ -31,6 +32,8 @@ from app.schemas.application import (
     Claim,
     Diligence,
     Memo,
+    AdversaryResponse,
+    DecisionBrief,
 )
 from app.schemas.common import SignalOut
 from app.services.intelligence import IntelligenceService
@@ -224,6 +227,58 @@ class ApplicationService:
         )
         self._apps.save()
         return memo
+
+    def adversary(self, application_id: str) -> AdversaryResponse:
+        app = self._require_app(application_id)
+        if not app.memo_json:
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Adversary requires memo")
+
+        if app.adversarial_json and app.decision_brief_json:
+            return AdversaryResponse(
+                adversarial=loads(app.adversarial_json),
+                decision_brief=loads(app.decision_brief_json)
+            )
+
+        claims = loads(app.claims_json) or []
+        axes = loads(app.axes_json)
+        memo = loads(app.memo_json)
+        diligence = loads(app.diligence_json)
+        signals = self._signals_payload(app.founder)
+
+        raw_adversary = self._ai.adversary({
+            "memo": memo,
+            "axes": axes,
+            "claims": claims,
+            "signals": signals,
+        })
+
+        adversarial = self._ai.verify_adversary({
+            "memo": memo,
+            "axes": axes,
+            "claims": claims,
+            "signals": signals,
+            "adversarial": raw_adversary,
+        })
+
+        # Deterministic Decision Brief generation
+        decision_brief = build_decision_brief(
+            diligence=diligence,
+            memo=memo,
+            adversarial=adversarial,
+            claims=claims,
+        )
+
+        app.adversarial_json = dumps(adversarial)
+        app.decision_brief_json = dumps(decision_brief.model_dump())
+        self._apps.add_audit(
+            stage="adversary",
+            action="adversary_run",
+            detail=adversarial.get("persona") or "Devil's Advocate",
+            founder_id=app.founder_id,
+            application_id=app.id,
+        )
+        self._apps.save()
+        return AdversaryResponse(adversarial=adversarial, decision_brief=decision_brief)
 
     def _resolve_founder(self, founder_name: str) -> Founder:
         normalized = normalize_founder_name(founder_name)

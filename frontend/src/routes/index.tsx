@@ -40,6 +40,7 @@ const ORIGIN_FILTERS: Array<OriginKind | "all"> = [
   "all",
   "github",
   "hn",
+  "yc",
   "inbound",
   "synthetic",
 ];
@@ -60,6 +61,71 @@ function DashboardPage() {
   const [compact, setCompact] = useState(false);
   const [askOpen, setAskOpen] = useState(false);
   const isMobile = useIsMobile();
+
+  const [scanStatus, setScanStatus] = useState<Array<{
+    source: string;
+    last_run: string | null;
+    founders_total: number;
+    cached: boolean;
+  }> | null>(null);
+  const [scanLoading, setScanLoading] = useState<Record<string, boolean>>({});
+  const [scanMessage, setScanMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancel = false;
+    fetch("/api/scan/status")
+      .then((r) => r.json())
+      .then((data) => {
+        if (!cancel) setScanStatus(data);
+      })
+      .catch((err) => console.error("Failed to load scan status", err));
+    return () => {
+      cancel = true;
+    };
+  }, []);
+
+  async function triggerScan(source: "github" | "hn" | "yc") {
+    setScanLoading((prev) => ({ ...prev, [source]: true }));
+    setScanMessage(null);
+    try {
+      let url = "";
+      let body: any = {};
+      if (source === "github") {
+        url = "/api/scan/github";
+        body = { topics: ["gpu", "compiler", "mlops"], since_days: 14 };
+      } else if (source === "hn") {
+        url = "/api/scan/hn";
+        body = { query: "AI infrastructure", since_days: 30 };
+      } else if (source === "yc") {
+        url = "/api/scan/yc";
+        body = { batches: ["W24", "S24"], industries: ["Artificial Intelligence"] };
+      }
+
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const result = await res.json();
+      
+      setScanMessage(
+        `Scanned ${source.toUpperCase()}: found ${result.new_founders} new founders and ${result.new_signals} new signals! ${result.cached ? "(Using offline cache)" : "(Queried live source)"}`
+      );
+
+      // Refresh dashboard & status
+      const dashRes = await fetch("/api/dashboard");
+      const dashData = await dashRes.json();
+      setFounders(dashData.founders ?? []);
+
+      const statRes = await fetch("/api/scan/status");
+      const statData = await statRes.json();
+      setScanStatus(statData);
+    } catch (err) {
+      setScanMessage(`Failed to scan ${source}: ${String(err)}`);
+    } finally {
+      setScanLoading((prev) => ({ ...prev, [source]: false }));
+    }
+  }
 
   useEffect(() => {
     let cancel = false;
@@ -267,6 +333,84 @@ function DashboardPage() {
             </button>
           </div>
         )}
+      </section>
+
+      {/* Sourcing Scanner Controls */}
+      <section className="rounded-2xl border border-[var(--ink)]/10 bg-[var(--paper)] p-6 shadow-[0_4px_20px_-10px_rgba(27,37,94,0.15)]">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span className="inline-block h-2 w-2 rounded-full bg-[var(--signal)] animate-pulse" />
+            <h2 className="font-display text-base font-semibold text-[var(--ink)]">
+              Venture Intelligence Sourcing Scanners
+            </h2>
+          </div>
+          <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--ink)]/45">
+            P0 Engine
+          </span>
+        </div>
+        <p className="mt-1 text-xs text-[var(--ink)]/60">
+          Crawl active technical directories and developer forums. Incoming signals are automatically normalized and merged on identity to trigger score updates.
+        </p>
+
+        {scanMessage && (
+          <div className="mt-4 rounded-lg border border-[var(--signal)]/20 bg-[var(--surface-accent)]/35 p-3 font-mono text-[11px] text-[var(--signal)] flex items-center justify-between">
+            <span>{scanMessage}</span>
+            <button type="button" onClick={() => setScanMessage(null)} className="text-[var(--signal)] hover:opacity-85 font-bold ml-2 text-sm leading-none">×</button>
+          </div>
+        )}
+
+        <div className="mt-4 grid gap-4 sm:grid-cols-3">
+          {(["github", "hn", "yc"] as const).map((src) => {
+            const status = scanStatus?.find((s) => s.source === src);
+            const isLoading = scanLoading[src];
+            
+            let label = "GitHub";
+            let desc = "Search AI repositories, topics, and developer bios";
+            let defaultFilters = "gpu, compiler, mlops";
+            if (src === "hn") {
+              label = "Hacker News";
+              desc = "Search Algolia comments, threads, and show-hns";
+              defaultFilters = "AI infrastructure, pre-seed";
+            } else if (src === "yc") {
+              label = "Y Combinator";
+              desc = "Batch crawl YC OSS and active company directory feeds";
+              defaultFilters = "W24, S24 Artificial Intelligence";
+            }
+
+            return (
+              <div key={src} className="flex flex-col justify-between rounded-xl border border-[var(--ink)]/5 bg-white/40 p-4 transition-all hover:border-[var(--ink)]/15 hover:bg-white/60">
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-display text-sm font-semibold text-[var(--ink)]">
+                      {label}
+                    </span>
+                    <span className={`rounded-full px-2 py-0.5 font-mono text-[9px] uppercase tracking-widest ${status?.cached ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700"}`}>
+                      {status?.cached ? "Offline cache" : "Live API"}
+                    </span>
+                  </div>
+                  <p className="mt-1.5 text-[11px] leading-relaxed text-[var(--ink)]/60">
+                    {desc}
+                  </p>
+                  <div className="mt-2.5 font-mono text-[10px] text-[var(--ink)]/40">
+                    <div>Filters: <span className="text-[var(--ink)]/60 italic">{defaultFilters}</span></div>
+                    <div className="mt-1 flex justify-between">
+                      <span>Founders: <strong className="text-[var(--ink)]">{status?.founders_total ?? 0}</strong></span>
+                      <span>Last run: <strong className="text-[var(--ink)]">{status?.last_run ? new Date(status.last_run).toLocaleTimeString() : "Never"}</strong></span>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => triggerScan(src)}
+                  className="mt-4 w-full rounded-lg border border-[var(--ink)]/15 bg-white py-2 text-center font-mono text-[11px] uppercase tracking-widest text-[var(--ink)]/75 shadow-sm transition-all hover:border-[var(--signal)]/35 hover:bg-[var(--surface-accent)] hover:text-[var(--signal)] disabled:opacity-50"
+                >
+                  {isLoading ? "Scanning..." : "Crawl & Enrich"}
+                </button>
+              </div>
+            );
+          })}
+        </div>
       </section>
 
       {/* Sort / filter row */}

@@ -71,6 +71,9 @@ function ApplicationPage() {
   const [tab, setTab] = useState<TabKey>("claims");
   const [auditOpen, setAuditOpen] = useState(false);
   const [runningAdversary, setRunningAdversary] = useState(false);
+  const [runningScreen, setRunningScreen] = useState(false);
+  const [runningDiligence, setRunningDiligence] = useState(false);
+  const [runningMemo, setRunningMemo] = useState(false);
   const [compact, setCompact] = useState(false);
   const trustSummary = useMemo(() => {
     const base = {
@@ -110,6 +113,48 @@ function ApplicationPage() {
     setNotFound(false);
     loadApp();
   }, [loadApp]);
+
+  async function runScreen() {
+    setRunningScreen(true);
+    try {
+      const r = await fetch(`/api/applications/${id}/screen`, { method: "POST" });
+      if (r.ok) {
+        const d: Application = await r.json();
+        setApp(d);
+        setTab("screen");
+      }
+    } finally {
+      setRunningScreen(false);
+    }
+  }
+
+  async function runDiligence() {
+    setRunningDiligence(true);
+    try {
+      const r = await fetch(`/api/applications/${id}/diligence`, { method: "POST" });
+      if (r.ok) {
+        const d: Application = await r.json();
+        setApp(d);
+        setTab("diligence");
+      }
+    } finally {
+      setRunningDiligence(false);
+    }
+  }
+
+  async function runMemo() {
+    setRunningMemo(true);
+    try {
+      const r = await fetch(`/api/applications/${id}/memo`, { method: "POST" });
+      if (r.ok) {
+        const d: Application = await r.json();
+        setApp(d);
+        setTab("memo");
+      }
+    } finally {
+      setRunningMemo(false);
+    }
+  }
 
   async function runAdversary() {
     setRunningAdversary(true);
@@ -311,12 +356,21 @@ function ApplicationPage() {
       {/* Tab body */}
       <div className={compact ? "mt-8 density-compact" : "mt-8"}>
         {tab === "claims" && <ClaimsTab claims={app.claims} state={app.stage.claims} />}
-        {tab === "screen" && <ScreenTab screen={app.screen} state={app.stage.screen} onRun={() => setTab("claims")} />}
+        {tab === "screen" && (
+          <ScreenTab
+            screen={app.screen}
+            state={app.stage.screen}
+            onRun={runScreen}
+            running={runningScreen}
+          />
+        )}
         {tab === "diligence" && (
           <DiligenceTab
             claims={app.claims}
             diligence={app.diligence}
             state={app.stage.diligence}
+            onRun={runDiligence}
+            running={runningDiligence}
           />
         )}
         {tab === "memo" && (
@@ -325,6 +379,8 @@ function ApplicationPage() {
             claims={app.claims}
             state={app.stage.memo}
             onJumpToClaim={() => setTab("diligence")}
+            onRun={runMemo}
+            running={runningMemo}
           />
         )}
         {tab === "adversary" && (
@@ -400,26 +456,28 @@ function StageNotYetRun({
   description,
   ctaLabel,
   onRun,
+  running = false,
 }: {
   stage: string;
   description: string;
   ctaLabel: string;
   onRun?: () => void;
+  running?: boolean;
 }) {
   return (
     <div className="fancy-card rounded-3xl border border-dashed border-[var(--ink)]/20 bg-[var(--surface-card-soft)] p-8">
       <div className="flex items-start gap-5">
         <div
           aria-hidden
-          className="mt-1 h-10 w-10 shrink-0 rounded-sm border border-[var(--ink)]/15"
+          className={`mt-1 h-10 w-10 shrink-0 rounded-sm border border-[var(--ink)]/15 ${running ? 'animate-pulse bg-[var(--signal)]' : ''}`}
           style={{
-            backgroundImage:
+            backgroundImage: running ? undefined :
               "repeating-linear-gradient(45deg, transparent 0 4px, color-mix(in oklab, var(--ink) 8%, transparent) 4px 5px)",
           }}
         />
         <div className="flex-1">
           <div className="font-mono text-[11px] uppercase tracking-widest text-[var(--ink)]/45">
-            stage · not yet run
+            {running ? "stage · executing..." : "stage · not yet run"}
           </div>
           <h3 className="mt-1 font-display text-xl font-medium tracking-tight text-[var(--ink)]">
             {stage}
@@ -428,10 +486,11 @@ function StageNotYetRun({
           <button
             type="button"
             onClick={onRun}
-            className="mt-5 inline-flex items-center gap-2 rounded-sm bg-[var(--signal)] px-4 py-2 text-sm font-medium text-[var(--paper)] transition-colors hover:bg-[color-mix(in_oklab,var(--signal)_88%,white)]"
+            disabled={running}
+            className={`mt-5 inline-flex items-center gap-2 rounded-sm bg-[var(--signal)] px-4 py-2 text-sm font-medium text-[var(--paper)] transition-colors hover:bg-[color-mix(in_oklab,var(--signal)_88%,white)] ${running ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-[var(--paper)]" />
-            {ctaLabel}
+            <span aria-hidden className={`h-1.5 w-1.5 rounded-full bg-[var(--paper)] ${running ? 'animate-ping' : ''}`} />
+            {running ? "Running Stage Agent..." : ctaLabel}
           </button>
         </div>
       </div>
@@ -694,10 +753,12 @@ function ScreenTab({
   screen,
   state,
   onRun,
+  running = false,
 }: {
   screen: AxisCard[] | null;
   state: StageState;
   onRun?: () => void;
+  running?: boolean;
 }) {
   if (state === "not_run" || !screen) {
     return (
@@ -706,6 +767,7 @@ function ScreenTab({
         description="Founder, Market, and Idea-vs-Market are scored independently. They are never averaged into a single number — each axis renders its own verdict, trend, and rationale."
         ctaLabel="Run screen"
         onRun={onRun}
+        running={running}
       />
     );
   }
@@ -818,10 +880,14 @@ function DiligenceTab({
   claims,
   diligence,
   state,
+  onRun,
+  running = false,
 }: {
   claims: Claim[];
   diligence: Application["diligence"];
   state: StageState;
+  onRun?: () => void;
+  running?: boolean;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [activeClaim, setActiveClaim] = useState<string | null>(null);
@@ -841,6 +907,8 @@ function DiligenceTab({
         stage="Run diligence"
         description="Diligence assigns a trust level and verdict to every claim by pulling corroborating (or contradicting) signals from public sources. Gaps are surfaced as visible annotations, never buried."
         ctaLabel="Run diligence"
+        onRun={onRun}
+        running={running}
       />
     );
   }
@@ -1023,11 +1091,15 @@ function MemoTab({
   claims,
   state,
   onJumpToClaim,
+  onRun,
+  running = false,
 }: {
   memo: Memo | null;
   claims: Claim[];
   state: StageState;
   onJumpToClaim: () => void;
+  onRun?: () => void;
+  running?: boolean;
 }) {
   if (state === "not_run" || !memo) {
     return (
@@ -1035,6 +1107,8 @@ function MemoTab({
         stage="Draft memo"
         description="The memo threads back to specific claim IDs. Snapshot, hypotheses, SWOT, problem/product, and traction — plus a recommendation with based_on claim IDs you can click back to."
         ctaLabel="Draft memo"
+        onRun={onRun}
+        running={running}
       />
     );
   }

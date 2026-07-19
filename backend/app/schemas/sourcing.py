@@ -37,3 +37,33 @@ class ScanRunResponse(BaseModel):
     new_founders: int
     new_signals: int
     cached: Literal[True] = True
+
+
+class PerSourceScanResponse(BaseModel):
+    source: str
+    new_founders: int
+    new_signals: int
+    cached: bool
+
+
+class GitHubScanRequest(BaseModel):
+    topics: list[str] | None = None
+    since_days: int | None = None
+
+
+class HNScanRequest(BaseModel):
+    query: str | None = None
+    since_days: int | None = None
+
+
+class YCScanRequest(BaseModel):
+    batches: list[str] | None = None
+    industries: list[str] | None = None
+
+
+class ScanStatusEntry(BaseModel):
+    source: str
+    last_run: str | None = None
+    founders_total: int
+    cached: bool
+

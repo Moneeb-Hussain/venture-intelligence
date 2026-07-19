@@ -24,6 +24,9 @@ import { Route as ApiApplicationsIdRouteImport } from './routes/api/applications
 import { Route as ApiDecisionsQueueRouteImport } from './routes/api/decisions.queue'
 import { Route as ApiFoundersIdRouteImport } from './routes/api/founders.$id'
 import { Route as ApiApplicationsIdAdversaryRouteImport } from './routes/api/applications.$id.adversary'
+import { Route as ApiApplicationsIdDiligenceRouteImport } from './routes/api/applications.$id.diligence'
+import { Route as ApiApplicationsIdMemoRouteImport } from './routes/api/applications.$id.memo'
+import { Route as ApiApplicationsIdScreenRouteImport } from './routes/api/applications.$id.screen'
 import { Route as ApiDecisionsIdDecideRouteImport } from './routes/api/decisions.$id.decide'
 import { Route as ApiFoundersIdActivateRouteImport } from './routes/api/founders.$id.activate'
 
@@ -103,6 +106,22 @@ const ApiApplicationsIdAdversaryRoute =
     path: '/adversary',
     getParentRoute: () => ApiApplicationsIdRoute,
   } as any)
+const ApiApplicationsIdDiligenceRoute =
+  ApiApplicationsIdDiligenceRouteImport.update({
+    id: '/diligence',
+    path: '/diligence',
+    getParentRoute: () => ApiApplicationsIdRoute,
+  } as any)
+const ApiApplicationsIdMemoRoute = ApiApplicationsIdMemoRouteImport.update({
+  id: '/memo',
+  path: '/memo',
+  getParentRoute: () => ApiApplicationsIdRoute,
+} as any)
+const ApiApplicationsIdScreenRoute = ApiApplicationsIdScreenRouteImport.update({
+  id: '/screen',
+  path: '/screen',
+  getParentRoute: () => ApiApplicationsIdRoute,
+} as any)
 const ApiDecisionsIdDecideRoute = ApiDecisionsIdDecideRouteImport.update({
   id: '/api/decisions/$id/decide',
   path: '/api/decisions/$id/decide',
@@ -130,6 +149,9 @@ export interface FileRoutesByFullPath {
   '/api/decisions/queue': typeof ApiDecisionsQueueRoute
   '/api/founders/$id': typeof ApiFoundersIdRouteWithChildren
   '/api/applications/$id/adversary': typeof ApiApplicationsIdAdversaryRoute
+  '/api/applications/$id/diligence': typeof ApiApplicationsIdDiligenceRoute
+  '/api/applications/$id/memo': typeof ApiApplicationsIdMemoRoute
+  '/api/applications/$id/screen': typeof ApiApplicationsIdScreenRoute
   '/api/decisions/$id/decide': typeof ApiDecisionsIdDecideRoute
   '/api/founders/$id/activate': typeof ApiFoundersIdActivateRoute
 }
@@ -149,6 +171,9 @@ export interface FileRoutesByTo {
   '/api/decisions/queue': typeof ApiDecisionsQueueRoute
   '/api/founders/$id': typeof ApiFoundersIdRouteWithChildren
   '/api/applications/$id/adversary': typeof ApiApplicationsIdAdversaryRoute
+  '/api/applications/$id/diligence': typeof ApiApplicationsIdDiligenceRoute
+  '/api/applications/$id/memo': typeof ApiApplicationsIdMemoRoute
+  '/api/applications/$id/screen': typeof ApiApplicationsIdScreenRoute
   '/api/decisions/$id/decide': typeof ApiDecisionsIdDecideRoute
   '/api/founders/$id/activate': typeof ApiFoundersIdActivateRoute
 }
@@ -169,6 +194,9 @@ export interface FileRoutesById {
   '/api/decisions/queue': typeof ApiDecisionsQueueRoute
   '/api/founders/$id': typeof ApiFoundersIdRouteWithChildren
   '/api/applications/$id/adversary': typeof ApiApplicationsIdAdversaryRoute
+  '/api/applications/$id/diligence': typeof ApiApplicationsIdDiligenceRoute
+  '/api/applications/$id/memo': typeof ApiApplicationsIdMemoRoute
+  '/api/applications/$id/screen': typeof ApiApplicationsIdScreenRoute
   '/api/decisions/$id/decide': typeof ApiDecisionsIdDecideRoute
   '/api/founders/$id/activate': typeof ApiFoundersIdActivateRoute
 }
@@ -190,6 +218,9 @@ export interface FileRouteTypes {
     | '/api/decisions/queue'
     | '/api/founders/$id'
     | '/api/applications/$id/adversary'
+    | '/api/applications/$id/diligence'
+    | '/api/applications/$id/memo'
+    | '/api/applications/$id/screen'
     | '/api/decisions/$id/decide'
     | '/api/founders/$id/activate'
   fileRoutesByTo: FileRoutesByTo
@@ -209,6 +240,9 @@ export interface FileRouteTypes {
     | '/api/decisions/queue'
     | '/api/founders/$id'
     | '/api/applications/$id/adversary'
+    | '/api/applications/$id/diligence'
+    | '/api/applications/$id/memo'
+    | '/api/applications/$id/screen'
     | '/api/decisions/$id/decide'
     | '/api/founders/$id/activate'
   id:
@@ -228,6 +262,9 @@ export interface FileRouteTypes {
     | '/api/decisions/queue'
     | '/api/founders/$id'
     | '/api/applications/$id/adversary'
+    | '/api/applications/$id/diligence'
+    | '/api/applications/$id/memo'
+    | '/api/applications/$id/screen'
     | '/api/decisions/$id/decide'
     | '/api/founders/$id/activate'
   fileRoutesById: FileRoutesById
@@ -355,6 +392,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiApplicationsIdAdversaryRouteImport
       parentRoute: typeof ApiApplicationsIdRoute
     }
+    '/api/applications/$id/diligence': {
+      id: '/api/applications/$id/diligence'
+      path: '/diligence'
+      fullPath: '/api/applications/$id/diligence'
+      preLoaderRoute: typeof ApiApplicationsIdDiligenceRouteImport
+      parentRoute: typeof ApiApplicationsIdRoute
+    }
+    '/api/applications/$id/memo': {
+      id: '/api/applications/$id/memo'
+      path: '/memo'
+      fullPath: '/api/applications/$id/memo'
+      preLoaderRoute: typeof ApiApplicationsIdMemoRouteImport
+      parentRoute: typeof ApiApplicationsIdRoute
+    }
+    '/api/applications/$id/screen': {
+      id: '/api/applications/$id/screen'
+      path: '/screen'
+      fullPath: '/api/applications/$id/screen'
+      preLoaderRoute: typeof ApiApplicationsIdScreenRouteImport
+      parentRoute: typeof ApiApplicationsIdRoute
+    }
     '/api/decisions/$id/decide': {
       id: '/api/decisions/$id/decide'
       path: '/api/decisions/$id/decide'
@@ -385,10 +443,16 @@ const FounderRouteWithChildren =
 
 interface ApiApplicationsIdRouteChildren {
   ApiApplicationsIdAdversaryRoute: typeof ApiApplicationsIdAdversaryRoute
+  ApiApplicationsIdDiligenceRoute: typeof ApiApplicationsIdDiligenceRoute
+  ApiApplicationsIdMemoRoute: typeof ApiApplicationsIdMemoRoute
+  ApiApplicationsIdScreenRoute: typeof ApiApplicationsIdScreenRoute
 }
 
 const ApiApplicationsIdRouteChildren: ApiApplicationsIdRouteChildren = {
   ApiApplicationsIdAdversaryRoute: ApiApplicationsIdAdversaryRoute,
+  ApiApplicationsIdDiligenceRoute: ApiApplicationsIdDiligenceRoute,
+  ApiApplicationsIdMemoRoute: ApiApplicationsIdMemoRoute,
+  ApiApplicationsIdScreenRoute: ApiApplicationsIdScreenRoute,
 }
 
 const ApiApplicationsIdRouteWithChildren =
