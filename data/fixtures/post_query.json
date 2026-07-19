@@ -10,6 +10,15 @@
   },
   "results": [
     {
+      "founder_id": "fndr_syn_002",
+      "why_matched": [
+        "Technical founder",
+        "AI infrastructure",
+        "Shipped in the last 30 days",
+        "No prior VC disclosed"
+      ]
+    },
+    {
       "founder_id": "fndr_syn_001",
       "why_matched": [
         "Technical founder",
