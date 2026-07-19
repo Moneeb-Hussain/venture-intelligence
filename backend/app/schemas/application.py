@@ -77,6 +77,59 @@ class Memo(BaseModel):
     recommendation: Recommendation
 
 
+AttackLabel = Literal["evidence-backed", "speculation"]
+AttackVerification = Literal["verified", "unverified", "n/a"]
+ContestedSeverity = Literal["red", "yellow", "dim"]
+
+
+class AdversarialObjection(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    text: str
+    targets: list[str]
+    evidence: list[str] | None = None
+    label: AttackLabel
+    verification: AttackVerification
+
+
+class Adversarial(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    persona: str
+    objections: list[AdversarialObjection]
+
+
+class ContestedItem(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    claim_id: str
+    objection_i: int
+    severity: ContestedSeverity
+
+
+class DecisionBriefStats(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    claims: int
+    contested: int
+    verified_attacks: int
+
+
+class DecisionBrief(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    summary: str
+    contested: list[ContestedItem]
+    stats: DecisionBriefStats
+
+
+class AdversaryResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    adversarial: Adversarial
+    decision_brief: DecisionBrief
+
+
 class ApplicationCreateRequest(BaseModel):
     company_name: str
     deck_text: str
@@ -97,6 +150,6 @@ class ApplicationAggregate(BaseModel):
     axes: Axes | None = None
     diligence: Diligence | None = None
     memo: Memo | None = None
-    adversarial: dict[str, Any] | None = None
-    decision_brief: dict[str, Any] | None = None
+    adversarial: Adversarial | None = None
+    decision_brief: DecisionBrief | None = None
     evidence: list[dict[str, Any]]

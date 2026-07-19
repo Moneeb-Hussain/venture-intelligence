@@ -44,3 +44,15 @@ class IntelligenceService:
         from ai_service.pipeline import parse_query
 
         return parse_query({"q": q, "thesis": thesis})
+
+    def adversary(self, payload: dict[str, Any]) -> dict[str, Any]:
+        _ensure_repo_on_path()
+        from ai_service.pipeline import write_adversary
+
+        return write_adversary(payload)
+
+    def verify_adversary(self, payload: dict[str, Any]) -> dict[str, Any]:
+        _ensure_repo_on_path()
+        from ai_service.pipeline import verify_adversary
+
+        return verify_adversary(payload)

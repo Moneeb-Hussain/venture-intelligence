@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { FOUNDERS, matchQuery } from "@/lib/dashboard-data";
+import { createFileRoute } from '@tanstack/react-router'
+import { fetchFromBackend, mapBackendFounderToFrontend } from "@/lib/backend-client";
 
 export type ParsedQuery = {
   technical_founder: boolean | null;
@@ -68,18 +68,48 @@ export const Route = createFileRoute("/api/query")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const body = (await request.json().catch(() => ({}))) as {
-          q?: string;
-        };
-        const q = (body.q ?? "").trim();
-        const parsed = parseQuery(q);
-        const results = FOUNDERS.map((f) => ({
-          founder: f,
-          why_matched: matchQuery(q, f),
-        }))
-          .filter((r) => r.why_matched.length > 0)
-          .sort((a, b) => b.founder.score - a.founder.score);
-        return Response.json({ q, parsed, results });
+        try {
+          const body = (await request.json().catch(() => ({}))) as {
+            q?: string;
+          };
+          const q = (body.q ?? "").trim();
+          
+          // Call live backend query
+          const backendRes = await fetchFromBackend("/api/query", {
+            method: "POST",
+            body: JSON.stringify({ q }),
+          });
+          
+          // Fetch full dashboard to resolve profiles
+          const bFounders = await fetchFromBackend("/api/dashboard");
+          const founders = bFounders.map(mapBackendFounderToFrontend);
+          const foundersMap = new Map(founders.map((f: any) => [f.id, f]));
+          
+          const results = (backendRes.results || []).map((r: any) => {
+            const founder = foundersMap.get(r.founder_id) || {
+              id: r.founder_id,
+              name: r.founder_id.replace(/^fndr_/, ""),
+              handle: `@${r.founder_id}`,
+              origin: "synthetic",
+              score: 75,
+              band: 5,
+              trend: "flat",
+              top_signals: r.why_matched || [],
+              has_open_app: false,
+              tags: [],
+            };
+            return {
+              founder,
+              why_matched: r.why_matched || [],
+            };
+          });
+          
+          const parsed = parseQuery(q);
+          return Response.json({ q, parsed, results });
+        } catch (e: any) {
+          console.error("Query backend fetch failed:", e);
+          return new Response(e.message || "Query fetch failed", { status: 500 });
+        }
       },
     },
   },

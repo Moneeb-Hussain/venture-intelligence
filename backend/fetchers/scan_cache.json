@@ -11,5 +11,67 @@
       "headline": "Technical founder building AI infrastructure",
       "note": "Reviewed cache record. Ingest via same normalize/dedup/score path as live scan."
     }
+  },
+  {
+    "source": "github",
+    "profile_url": "https://github.com/arisvance",
+    "username": "arisvance",
+    "display_name": "Aris Vance",
+    "fetched_at": "2026-07-18T08:00:00Z",
+    "cached": true,
+    "raw": {
+      "repo_name": "fast-tensor",
+      "description": "High-performance GPU tensor compiler and execution engine for LLM inference",
+      "topics": ["gpu", "tensor", "compiler", "llm-inference", "infrastructure"],
+      "username": "arisvance",
+      "display_name": "Aris Vance",
+      "origin": "github"
+    }
+  },
+  {
+    "source": "github",
+    "profile_url": "https://github.com/mayachen",
+    "username": "mayachen",
+    "display_name": "Maya Chen",
+    "fetched_at": "2026-07-18T08:00:00Z",
+    "cached": true,
+    "raw": {
+      "repo_name": "neural-kit",
+      "description": "Distributing and parallelizing weights across consumer GPU nodes",
+      "topics": ["gpu-virtualization", "deep-learning", "orchestration"],
+      "username": "mayachen",
+      "display_name": "Maya Chen",
+      "origin": "github"
+    }
+  },
+  {
+    "source": "hn",
+    "profile_url": "https://news.ycombinator.com/user?id=arisvance",
+    "username": "arisvance",
+    "display_name": "Aris Vance",
+    "fetched_at": "2026-07-18T08:00:00Z",
+    "cached": true,
+    "raw": {
+      "title": "Show HN: FastTensor - GPU compiler that is 10x faster than NumPy",
+      "text": "Hey HN, I have been building a low-level tensor compiler to virtualize memory across mixed cluster topologies. It handles standard kernels beautifully.",
+      "username": "arisvance",
+      "display_name": "Aris Vance",
+      "origin": "hn"
+    }
+  },
+  {
+    "source": "yc",
+    "profile_url": "https://www.ycombinator.com/companies/fasttensor",
+    "username": "fasttensor",
+    "display_name": "Aris Vance",
+    "fetched_at": "2026-07-18T08:00:00Z",
+    "cached": true,
+    "raw": {
+      "company_name": "FastTensor",
+      "description": "Rebuilding ML infrastructure with compiled tensor operations for low-latency systems.",
+      "industries": ["Artificial Intelligence", "Developer Tools", "Infrastructure"],
+      "display_name": "Aris Vance",
+      "origin": "yc"
+    }
   }
 ]

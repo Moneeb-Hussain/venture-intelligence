@@ -25,6 +25,7 @@ class ThesisRepository:
             geo=json.loads(row.geo_json),
             check_size=row.check_size,
             risk_appetite=row.risk_appetite,  # type: ignore[arg-type]
+            ownership_target=row.ownership_target,
         )
 
     def upsert(self, thesis: Thesis) -> Thesis:
@@ -38,6 +39,7 @@ class ThesisRepository:
                 geo_json=json.dumps(thesis.geo),
                 check_size=thesis.check_size,
                 risk_appetite=thesis.risk_appetite,
+                ownership_target=thesis.ownership_target,
                 updated_at=now,
             )
             self._db.add(row)
@@ -47,6 +49,7 @@ class ThesisRepository:
             row.geo_json = json.dumps(thesis.geo)
             row.check_size = thesis.check_size
             row.risk_appetite = thesis.risk_appetite
+            row.ownership_target = thesis.ownership_target
             row.updated_at = now
         self._db.commit()
         return thesis

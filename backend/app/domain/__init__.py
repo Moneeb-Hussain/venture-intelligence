@@ -1,6 +1,7 @@
 """Pure domain logic — no I/O, no FastAPI."""
 
 from app.domain.diligence import guard_memo_recommendation, map_trust, normalize_diligence_row
+from app.domain.decision_brief import build_decision_brief
 from app.domain.founder_score import (
     ScoreSnapshot,
     SignalPoint,
@@ -21,4 +22,5 @@ __all__ = [
     "minutes_between",
     "normalize_diligence_row",
     "normalize_founder_name",
+    "build_decision_brief",
 ]
